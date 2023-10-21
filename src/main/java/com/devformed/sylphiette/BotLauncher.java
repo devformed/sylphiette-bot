@@ -1,4 +1,4 @@
-package com.devformed.sylphiette.service;
+package com.devformed.sylphiette;
 
 import com.devformed.sylphiette.config.BotConfig;
 import net.dv8tion.jda.api.JDA;
@@ -6,12 +6,12 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Anton Gorokh
  */
-@Component
+@Service
 public final class BotLauncher implements CommandLineRunner {
 
 	private final BotConfig config;
@@ -24,9 +24,11 @@ public final class BotLauncher implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) {
-		JDA jda = JDABuilder.createLight(config.token(), BotConfig.INTENTS)
+	public void run(String... args) throws InterruptedException {
+		JDA jda = JDABuilder.createDefault(config.token(), BotConfig.INTENTS)
 				.addEventListeners((Object[]) eventListeners)
 				.build();
+
+		jda.awaitReady();
 	}
 }

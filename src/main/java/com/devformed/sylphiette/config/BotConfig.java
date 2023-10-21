@@ -13,10 +13,12 @@ import java.util.List;
 public record BotConfig(
 		String name,
 		String token,
-		String authorId
+		String id,
+		String authorId,
+		String defaultLocale
 ) {
 
 	public static final List<GatewayIntent> INTENTS = ImmutableList.of(
-			GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS
+			GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES
 	);
 }

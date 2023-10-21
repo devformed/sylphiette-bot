@@ -13,17 +13,17 @@ import java.util.Arrays;
 @Component
 public class ChatGptResponder {
 
+	private final ChatGptConfig gptConfig;
 	private final ChatGPT chatGPT;
-	private final ChatCompletion.Model model;
 	private final Message systemMsg;
 
 	@Autowired
 	public ChatGptResponder(ChatGptConfig gptConfig) {
+		this.gptConfig = gptConfig;
 		this.chatGPT = ChatGPT.builder()
 				.apiKey(gptConfig.key())
 				.build().init();
 		this.systemMsg = Message.ofSystem(gptConfig.systemMsg());
-		this.model = gptConfig.model();
 
 	}
 
@@ -39,10 +39,10 @@ public class ChatGptResponder {
 	private ChatCompletion getChatCompletion(String prompt) {
 		Message userMsg = Message.of(prompt);
 		return ChatCompletion.builder()
-				.model(model.getName())
+				.model(gptConfig.model().getName())
 				.messages(Arrays.asList(systemMsg, userMsg))
-				.maxTokens(3000)
-				.temperature(0.9)
+				.maxTokens(gptConfig.maxTokens())
+				.temperature(gptConfig.temperature())
 				.build();
 	}
 }
