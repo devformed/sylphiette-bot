@@ -8,6 +8,8 @@ public record ChatGptConfig(
 		String url,
 		String key,
 		String systemMsg,
+		Integer systemMsgTokens,
+		Integer maxTokensResponse,
 		Integer maxTokens,
 		Double temperature,
 		ChatCompletion.Model model

@@ -45,11 +45,10 @@ public class MessageReceiveListener extends ListenerAdapter {
 		}
 
 		MessageChannelUnion channel = message.getChannel();
-		User author = message.getAuthor();
 		Locale locale = Locale.forLanguageTag(botConfig.defaultLocale());
 
 		try {
-			processMessage(channel, author, content, locale);
+			processMessage(message, locale);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to process message=" + content);
 			if (content.contains("@" + botConfig.name())) {
@@ -59,11 +58,14 @@ public class MessageReceiveListener extends ListenerAdapter {
 	}
 
 
-	private void processMessage(MessageChannelUnion channel, User author, String content, Locale locale) {
+	private void processMessage(Message message, Locale locale) {
+		String content = message.getContentDisplay();
+		MessageChannelUnion channel = message.getChannel();
+
 		if (isNotCommand(content)) {
 			if (isBotMentioned(content)) {
 				channel.sendMessage(getRandomFiller(locale)).queue();
-				channel.sendMessage(chatGptResponder.askBot(author, content)).queue();
+				channel.sendMessage(chatGptResponder.askBot(message, botConfig.id())).queue();
 			}
 		} else {
 			String command = getCommand(content);
