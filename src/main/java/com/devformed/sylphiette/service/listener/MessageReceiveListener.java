@@ -1,8 +1,10 @@
 package com.devformed.sylphiette.service.listener;
 
 import com.devformed.sylphiette.config.BotConfig;
+import com.devformed.sylphiette.dto.MessageDto;
 import com.devformed.sylphiette.i18n.I18n;
 import com.devformed.sylphiette.service.ChatGptResponder;
+import com.devformed.sylphiette.util.MessageUtils;
 import com.devformed.sylphiette.util.UserUtils;
 import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.Message;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.logging.Level;
@@ -64,8 +67,7 @@ public class MessageReceiveListener extends ListenerAdapter {
 
 		if (isNotCommand(content)) {
 			if (isBotMentioned(content)) {
-				channel.sendMessage(getRandomFiller(locale)).queue();
-				channel.sendMessage(chatGptResponder.askBot(message, botConfig.id())).queue();
+				processGptRequest(message, locale);
 			}
 		} else {
 			String command = getCommand(content);
@@ -75,6 +77,19 @@ public class MessageReceiveListener extends ListenerAdapter {
 			};
 			channel.sendMessage(response).queue();
 		}
+	}
+
+	private void processGptRequest(Message message, Locale locale) {
+		MessageChannelUnion channel = message.getChannel();
+		channel.sendMessage(getRandomFiller(locale)).queue();
+
+		List<Message> history = channel.getHistoryBefore(message, 50)
+				.complete()
+				.getRetrievedHistory();
+		List<MessageDto> historyDto = MessageUtils.toDto(history);
+		MessageDto messageDto = MessageUtils.toDto(message);
+
+		channel.sendMessage(chatGptResponder.askSylphiette(historyDto, messageDto)).queue();
 	}
 
 	private String getCommand(String content) {

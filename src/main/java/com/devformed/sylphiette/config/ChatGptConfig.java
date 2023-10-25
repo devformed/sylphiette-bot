@@ -7,11 +7,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record ChatGptConfig(
 		String url,
 		String key,
-		String systemMsg,
-		Integer systemMsgTokens,
+		Double temperature,
+		ChatCompletion.Model model,
+
 		Integer maxTokensResponse,
 		Integer maxTokens,
-		Double temperature,
-		ChatCompletion.Model model
+
+		Integer promptTokens,
+		String promptSylphiette
 ) {
 }
