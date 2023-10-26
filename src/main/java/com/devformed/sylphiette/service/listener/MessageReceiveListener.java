@@ -5,7 +5,6 @@ import com.devformed.sylphiette.dto.MessageDto;
 import com.devformed.sylphiette.i18n.I18n;
 import com.devformed.sylphiette.service.ChatGptResponder;
 import com.devformed.sylphiette.util.MessageUtils;
-import com.devformed.sylphiette.util.UserUtils;
 import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -60,23 +59,10 @@ public class MessageReceiveListener extends ListenerAdapter {
 		}
 	}
 
-
 	private void processMessage(Message message, Locale locale) {
 		String content = message.getContentDisplay();
-		MessageChannelUnion channel = message.getChannel();
-
-		if (isNotCommand(content)) {
-			if (isBotMentioned(content)) {
-				processGptRequest(message, locale);
-			}
-		} else {
-			String command = getCommand(content);
-			String response = switch (command) {
-				case "!author" -> I18n.translate("MESSAGE.ANSWER.AUTHOR_DESC", locale) + " " + UserUtils.ping(botConfig.authorId());
-				default -> I18n.translate("MESSAGE.ANSWER.UNKNOWN_COMMAND", locale);
-			};
-			channel.sendMessage(response).queue();
-		}
+		if (isBotMentioned(content))
+			processGptRequest(message, locale);
 	}
 
 	private void processGptRequest(Message message, Locale locale) {
@@ -92,19 +78,9 @@ public class MessageReceiveListener extends ListenerAdapter {
 		channel.sendMessage(chatGptResponder.askSylphiette(historyDto, messageDto)).queue();
 	}
 
-	private String getCommand(String content) {
-		int spaceIndex = content.indexOf(" ");
-		var command = spaceIndex != -1 ? content.substring(0, spaceIndex) : content;
-		return command.toLowerCase();
-	}
-
 	private String getRandomFiller(Locale locale) {
 		String[] fillers = I18n.translate("MESSAGE.ANSWER.FILLER_WORDS", locale).split("\n");
 		return fillers[random.nextInt(fillers.length)];
-	}
-
-	private boolean isNotCommand(String content) {
-		return '!' != content.charAt(0);
 	}
 
 	private boolean isBot(User author) {
