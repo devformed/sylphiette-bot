@@ -1,37 +1,46 @@
 package com.devformed.sylphiette.service.listener;
 
 import com.devformed.sylphiette.config.BotConfig;
-import com.devformed.sylphiette.i18n.I18n;
-import com.devformed.sylphiette.util.UserUtils;
+import com.devformed.sylphiette.service.command.CommandHandler;
+import lombok.extern.java.Log;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.logging.Level;
 
+@Log
 @Component
 public class SlashCommandsListener extends ListenerAdapter {
 
 	private final BotConfig botConfig;
+	private final Map<String, CommandHandler> commandHandlers;
 
-	@Autowired
-	public SlashCommandsListener(BotConfig botConfig) {
+	public SlashCommandsListener(BotConfig botConfig, Set<CommandHandler> commandHandlers) {
 		this.botConfig = botConfig;
+		this.commandHandlers = commandHandlers.stream()
+				.collect(HashMap::new, (m, v) -> m.put(v.supportedCommand(), v), HashMap::putAll);
 	}
 
 	@Override
 	public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-		String command = event.getName();
 		Locale locale = Locale.forLanguageTag(botConfig.defaultLocale());
-
-		if ("author".equals(command)) {
-			handleAuthorCommand(event, locale);
-		}
+		Optional.ofNullable(commandHandlers.get(event.getName()))
+				.or(this::getDefaultHandler)
+				.ifPresentOrElse(handler -> handler.handleCommand(event, locale), this::logHandlerMiss);
 	}
 
-	private void handleAuthorCommand(SlashCommandInteractionEvent event, Locale locale) {
-		event.reply(I18n.translate("MESSAGE.ANSWER.AUTHOR_DESC", locale) + " " + UserUtils.ping(botConfig.authorId())).queue();
+	private Optional<CommandHandler> getDefaultHandler() {
+		return Optional.ofNullable(commandHandlers.get(null));
+	}
+
+	private void logHandlerMiss() {
+		log.log(Level.WARNING, "No default command handler provided");
 	}
 }
