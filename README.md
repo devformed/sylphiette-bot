@@ -1,7 +1,7 @@
 <a name="readme-top"></a>
 
-# Sylphiette Bot ⠀⠀⠀⠀⠀[![Discord][discord.com]][discord-url][![ChatGPT][chat.openai.com]][chat-gpt-url][![Java][java.com]][Java-url][![Spring][Spring.io]][Spring-url]
-![Image for Sylphiette Bot](doc/images/sylphiette-fitts-crop-700x275.jpg)
+# Sylphiette Bot⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[![Discord][discord.com]][discord-url][![Java][java.com]][Java-url][![Spring][Spring.io]][Spring-url]
+<img src="./doc/images/sylphiette-fitts-crop-700x275.jpg" width=100%>
 
 <p align="right"><a href="#readme-top">[back to top]</a></p>
 
@@ -27,5 +27,3 @@
 [Spring-url]: https://spring.io/
 [discord.com]: https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white
 [discord-url]: https://discord.com/
-[chat.openai.com]: https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white
-[chat-gpt-url]: https://openai.com/blog/chatgpt
