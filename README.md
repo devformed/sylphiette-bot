@@ -1,6 +1,6 @@
 <a name="readme-top"></a>
 
-# Sylphiette Bot⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[![Discord][discord.com]][discord-url][![Java][java.com]][Java-url][![Spring][Spring.io]][Spring-url]
+# <p>Sylphiette Bot <span style="float: right">[![Discord][discord.com]][discord-url][![Java][java.com]][Java-url][![Spring][Spring.io]][Spring-url]</span></p>
 <img src="./doc/images/sylphiette-fitts-crop-700x275.jpg" width=100%>
 
 <p align="right"><a href="#readme-top">[back to top]</a></p>
