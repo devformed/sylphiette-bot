@@ -1,10 +1,8 @@
 package com.devformed.sylphiette.service.listener;
 
 import com.devformed.sylphiette.config.BotConfig;
-import com.devformed.sylphiette.dto.MessageDto;
 import com.devformed.sylphiette.i18n.I18n;
-import com.devformed.sylphiette.service.ChatGptResponder;
-import com.devformed.sylphiette.util.MessageUtils;
+import com.devformed.sylphiette.service.ChatGptRequestHandler;
 import lombok.extern.java.Log;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -15,9 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.logging.Level;
 
 /**
@@ -27,15 +23,13 @@ import java.util.logging.Level;
 @Component
 public class MessageReceiveListener extends ListenerAdapter {
 
-	private final ChatGptResponder chatGptResponder;
+	private final ChatGptRequestHandler chatGptRequestHandler;
 	private final BotConfig botConfig;
-	private final Random random;
 
 	@Autowired
-	public MessageReceiveListener(ChatGptResponder chatGptResponder, BotConfig botConfig) {
-		this.chatGptResponder = chatGptResponder;
+	public MessageReceiveListener(ChatGptRequestHandler chatGptRequestHandler, BotConfig botConfig) {
+		this.chatGptRequestHandler = chatGptRequestHandler;
 		this.botConfig = botConfig;
-		random = new Random();
 	}
 
 	@Override
@@ -62,25 +56,7 @@ public class MessageReceiveListener extends ListenerAdapter {
 	private void processMessage(Message message, Locale locale) {
 		String content = message.getContentDisplay();
 		if (isBotMentioned(content))
-			processGptRequest(message, locale);
-	}
-
-	private void processGptRequest(Message message, Locale locale) {
-		MessageChannelUnion channel = message.getChannel();
-		channel.sendMessage(getRandomFiller(locale)).queue();
-
-		List<Message> history = channel.getHistoryBefore(message, 50)
-				.complete()
-				.getRetrievedHistory();
-		List<MessageDto> historyDto = MessageUtils.toDto(history);
-		MessageDto messageDto = MessageUtils.toDto(message);
-
-		channel.sendMessage(chatGptResponder.askSylphiette(historyDto, messageDto)).queue();
-	}
-
-	private String getRandomFiller(Locale locale) {
-		String[] fillers = I18n.translate("MESSAGE.ANSWER.FILLER_WORDS", locale).split("\n");
-		return fillers[random.nextInt(fillers.length)];
+			chatGptRequestHandler.handleGptRequest(message, locale);
 	}
 
 	private boolean isBot(User author) {

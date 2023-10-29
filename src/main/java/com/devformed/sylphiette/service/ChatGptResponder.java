@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public class ChatGptResponder {
 
-	private static final Pattern GPT_RESPONSE_PATTERN = Pattern.compile("\\w+\\s*:(.+)");
+	private static final Pattern GPT_RESPONSE_PATTERN = Pattern.compile("<?@?\\w+>?:(.+)");
 
 	private final ChatGptConfig gptConfig;
 	private final ChatGPT chatGPT;
