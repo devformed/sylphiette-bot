@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Component
 public class ChatGptResponder {
 
-	private static final Pattern GPT_RESPONSE_PATTERN = Pattern.compile("\\w+\\s*:(.+)");
+	private static final Pattern GPT_RESPONSE_PATTERN = Pattern.compile("<?@?\\w+>?:(.+)");
 
 	private final ChatGptConfig gptConfig;
 	private final ChatGPT chatGPT;
@@ -34,7 +34,7 @@ public class ChatGptResponder {
 	}
 
 	public String askSylphiette(List<MessageDto> history, MessageDto prompt) {
-		String rawResponse = askBot(history, prompt);
+		String rawResponse = getResponse(history, prompt);
 		log.log(Level.INFO, "raw ChatGpt response=" + rawResponse);
 
 		Matcher matcher = GPT_RESPONSE_PATTERN.matcher(rawResponse);
@@ -42,7 +42,7 @@ public class ChatGptResponder {
 		return rawResponse;
 	}
 
-	private String askBot(List<MessageDto> history, MessageDto prompt) {
+	private String getResponse(List<MessageDto> history, MessageDto prompt) {
 		Message promptMessage = toMessage(prompt);
 		int initTokens = gptConfig.promptTokens() + tokenize(promptMessage);
 
