@@ -4,7 +4,6 @@ import com.devformed.sylphiette.dto.MessageDto;
 import com.devformed.sylphiette.i18n.I18n;
 import com.devformed.sylphiette.util.MessageUtils;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,7 +45,6 @@ public class ChatGptRequestHandler {
 				.map(MessageUtils::toDto)
 				.toList();
 		MessageDto messageDto = MessageUtils.toDto(message);
-		MessageHistory.MessageRetrieveAction historyBefore = channel.getHistoryBefore(message, 50);
 		message.reply(chatGptResponder.askSylphiette(historyDto, messageDto)).queue();
 	}
 
