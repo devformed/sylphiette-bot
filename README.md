@@ -8,7 +8,9 @@
 
 ## Overview
 
-- TODO
+- Interactive discord bot acting like Sylphy from Mushoku Tensei. Uses ChatGPT 3.5-turbo (configurable) model alongside 
+Sylphiette system prompt which allows it to answer to any user questions accordingly to its character when it is 
+pinged (**@Syplhiette**, configurable) in text channel.
 
 <p align="right"><a href="#readme-top">[back to top]</a></p>
 
@@ -20,7 +22,7 @@
 
 ## Contact
 
-- You can reach to me by sending [mail](https://mail.google.com/mail/u/0/?fs=1&to=rerearitet@gmail.com&tf=cm) to
+- You can reach me by sending [mail](https://mail.google.com/mail/u/0/?fs=1&to=rerearitet@gmail.com&tf=cm) to
   rerearitet@gmail.com
 
 <p align="right"><a href="#readme-top">[back to top]</a></p>
