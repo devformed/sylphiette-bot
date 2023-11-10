@@ -33,7 +33,7 @@ public class ChatGptResponder {
 
 	public String askSylphiette(List<MessageDto> history, MessageDto prompt) {
 		return getResponse(history, prompt)
-				.replaceAll("^[\\w@<>]+:", "");
+				.replaceAll("^[\\w@<>]+:\\s*", "");
 	}
 
 	private static ChatGPT initGPT(String apiKey) {
