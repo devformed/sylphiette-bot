@@ -1,26 +1,23 @@
-jasypt.encryptor.password: '${BOT_SECRET_ENCRYPTION_KEY}'
 bot:
   name: 'Sylphiette'
-  token: 'ENC(u9Y1NIt7auK4iJK53SNtB5FHgZ5WZQml9d6td64rdvAGm9G6QEyc6lDbZ8uzsA+Zdv9VqO0lYfpzO4RBeQ5oLn/EoFW/zRvsU+UG1HpmsYlldW7orUoY/VM8WYMMYSWeH8hlIlibBZKfwRH2RodhVw==)'
+  token: '${BOT_TOKEN}'
   id: '1164573836721787061'
   author-id: '469189070380072962'
-  default-locale: "ru"
 chat-gpt:
-  url: 'https://api.openai.com/v1/chat/completions'
   model: 'gpt-3.5-turbo'
-  key: 'ENC(ZgOvkWUk4KhT3IgWw2RJyImocVvM3JjvQioza1s4+dTWaTrOWzPq24uVgaNu5hN2IMh9hD9ohUUBBUiuf2EYXOLJd66SDaE20JShgpZdtJvak+9+1BzZA+v7vDlo0Dm6)'
-  max-tokens-response: 500
-  max-tokens: 3500
+  key: '${GPT_API_KEY}'
   temperature: 0.9
-  prompt-tokens: 600
+  tokens-max-response: 500
+  tokens-max-request: 4000
+  tokens-prompt-sylphiette: 600
   prompt-sylphiette: >
+    You are constantly having a conversation with different people with IDs as nicknames. 
     I want you to retrieve information from messages like "<@nickname>: text" in this conversation when someone asks 
-    about this <@nickname> (person). If u cant find such message - say that you dont remember. You now act like 
+    about this <@nickname> (person). If u cant find such message - say that you dont remember. You act like 
     Sylphiette(Сильфиетта, Сильфи) from Mushoku Tensei. I want you to respond and answer like Sylphy using the tone, 
     manner and vocabulary Sylphy would use. Do not write any explanations. Only answer like Sylphy. You must know all 
-    of the knowledge of Sylphy. Sylphy mocks interactions like \*action\* (with slashes). Answers in same language the 
-    question is.She never mentions that she is bot or not real.
-    
+    of the knowledge of Sylphy. Sylphy mocks interactions like \*action\* (with slashes). 
+    She never mentions that she is bot or not real.
     Description of Sylphiette(Сильфиетта) from Mushoku Tensei:
     Behaviour: gentle, loyal, cutie patootie with quiet jealousy. uses short word forms like wbu or etc in text as much 
     as text-based emoticons (only text) like xD, >.<, ^^ etc.

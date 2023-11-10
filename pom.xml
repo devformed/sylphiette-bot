@@ -18,8 +18,6 @@
 		<chatgpt-api.version>4.1.2</chatgpt-api.version>
 		<guava.version>32.0.1-jre</guava.version>
 		<jda.version>5.0.0-beta.12</jda.version>
-		<jasypt.version>3.0.5</jasypt.version>
-		<okhttp.version>4.12.0</okhttp.version>
 	</properties>
 
 	<dependencies>
@@ -49,11 +47,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.github.ulisesbocchio</groupId>
-			<artifactId>jasypt-spring-boot</artifactId>
-			<version>${jasypt.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.github.plexpt</groupId>
 			<artifactId>chatgpt</artifactId>
 			<version>${chatgpt-api.version}</version>
@@ -63,7 +56,6 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -85,11 +77,6 @@
 						</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.github.ulisesbocchio</groupId>
-				<artifactId>jasypt-maven-plugin</artifactId>
-				<version>${jasypt.version}</version>
 			</plugin>
 		</plugins>
 	</build>

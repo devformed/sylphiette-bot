@@ -3,10 +3,8 @@ package com.devformed.sylphiette.i18n;
 import com.google.common.io.Resources;
 import lombok.extern.java.Log;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Locale;
@@ -52,12 +50,11 @@ public class I18n {
 	private static ResourceBundle getBundle(Locale locale) {
 		try {
 			URL resource = Resources.getResource("i18n/translations_" + locale.getLanguage() + ".properties");
-			return new PropertyResourceBundle(new FileReader(new File(resource.toURI())));
+			ByteArrayInputStream resourceIS = new ByteArrayInputStream(Resources.toByteArray(resource));
+			return new PropertyResourceBundle(resourceIS);
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "Failed to load bundle for locale $locale", e);
 			return null;
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
 		}
 	}
 
