@@ -1,5 +1,6 @@
 package com.devformed.sylphiette.service.listener;
 
+import com.devformed.sylphiette.GlobalConstants;
 import com.devformed.sylphiette.config.BotConfig;
 import com.devformed.sylphiette.i18n.I18n;
 import com.devformed.sylphiette.service.ChatGptRequestHandler;
@@ -41,7 +42,7 @@ public class MessageReceiveListener extends ListenerAdapter {
 		}
 
 		MessageChannelUnion channel = message.getChannel();
-		Locale locale = Locale.forLanguageTag(botConfig.defaultLocale());
+		Locale locale = GlobalConstants.DEFAULT_LOCALE;
 
 		try {
 			processMessage(message, locale);

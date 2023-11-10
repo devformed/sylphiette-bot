@@ -1,50 +1,52 @@
 package com.devformed.sylphiette.service;
 
+import com.devformed.sylphiette.config.BotConfig;
 import com.devformed.sylphiette.config.ChatGptConfig;
 import com.devformed.sylphiette.dto.MessageDto;
+import com.devformed.sylphiette.util.UserUtils;
 import com.plexpt.chatgpt.ChatGPT;
 import com.plexpt.chatgpt.entity.chat.ChatCompletion;
 import com.plexpt.chatgpt.entity.chat.Message;
-import lombok.extern.java.Log;
 import org.apache.commons.collections4.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Log
+/**
+ * @author Anton Gorokh
+ */
 @Component
 public class ChatGptResponder {
 
-	private static final Pattern GPT_RESPONSE_PATTERN = Pattern.compile("<?@?\\w+>?:(.+)");
-
 	private final ChatGptConfig gptConfig;
+	private final BotConfig botConfig;
 	private final ChatGPT chatGPT;
 
 	@Autowired
-	public ChatGptResponder(ChatGptConfig gptConfig) {
+	public ChatGptResponder(ChatGptConfig gptConfig, BotConfig botConfig) {
 		this.gptConfig = gptConfig;
-		this.chatGPT = ChatGPT.builder()
-				.apiKey(gptConfig.key())
-				.build().init();
+		this.botConfig = botConfig;
+		this.chatGPT = initGPT(gptConfig.key());
 	}
 
 	public String askSylphiette(List<MessageDto> history, MessageDto prompt) {
-		String rawResponse = getResponse(history, prompt);
-		log.log(Level.INFO, "raw ChatGpt response=" + rawResponse);
+		return getResponse(history, prompt)
+				.replaceAll("^[\\w@<>]+:", "");
+	}
 
-		Matcher matcher = GPT_RESPONSE_PATTERN.matcher(rawResponse);
-		if (matcher.find()) return matcher.group(1);
-		return rawResponse;
+	private static ChatGPT initGPT(String apiKey) {
+		return ChatGPT
+				.builder()
+				.apiKey(apiKey)
+				.build()
+				.init();
 	}
 
 	private String getResponse(List<MessageDto> history, MessageDto prompt) {
 		Message promptMessage = toMessage(prompt);
-		int initTokens = gptConfig.promptTokens() + tokenize(promptMessage);
+		int initTokens = gptConfig.tokensPromptSylphiette() + tokenize(promptMessage);
 
 		List<Message> messages = toMessages(history, initTokens);
 		messages.add(Message.ofSystem(gptConfig.promptSylphiette()));
@@ -55,9 +57,12 @@ public class ChatGptResponder {
 	private List<Message> toMessages(List<MessageDto> historyMessages, int currentTokens) {
 		TreeList<MessageDto> selectedHistory = new TreeList<>();
 		for (MessageDto historyMsg : historyMessages) {
+			if (historyMsg.content().length() <= 10) {
+				continue;
+			}
+
 			Message msg = toMessage(historyMsg);
 			int newTokens = tokenize(msg);
-
 			if (messageExceedsLimit(currentTokens, newTokens)) {
 				break;
 			}
@@ -72,7 +77,8 @@ public class ChatGptResponder {
 	}
 
 	private Message toMessage(MessageDto prompt) {
-		return Message.ofSystem("<@" + prompt.author() + ">: " + prompt.content());
+		String content = UserUtils.ping(prompt.author()) + ": " + prompt.content();
+		return prompt.author().contains(botConfig.id()) ? Message.ofAssistant(content) : Message.of(content);
 	}
 
 	private int tokenize(Message message) {
@@ -80,7 +86,7 @@ public class ChatGptResponder {
 	}
 
 	private boolean messageExceedsLimit(int currentTokens, int msgTokens) {
-		return gptConfig.maxTokens() < gptConfig.maxTokensResponse() + currentTokens + msgTokens;
+		return gptConfig.tokensMaxResponse() + currentTokens + msgTokens >= gptConfig.tokensMaxRequest();
 	}
 
 	private String sendRequest(ChatCompletion chatCompletion) {
@@ -95,7 +101,7 @@ public class ChatGptResponder {
 		return ChatCompletion.builder()
 				.model(gptConfig.model().getName())
 				.messages(messages)
-				.maxTokens(gptConfig.maxTokensResponse())
+				.maxTokens(gptConfig.tokensMaxResponse())
 				.temperature(gptConfig.temperature())
 				.build();
 	}

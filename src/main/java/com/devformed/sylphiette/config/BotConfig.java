@@ -14,8 +14,7 @@ public record BotConfig(
 		String name,
 		String token,
 		String id,
-		String authorId,
-		String defaultLocale
+		String authorId
 ) {
 
 	public static final List<GatewayIntent> INTENTS = ImmutableList.of(
