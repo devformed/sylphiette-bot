@@ -15,7 +15,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>
-		<chatgpt-api.version>4.1.2</chatgpt-api.version>
+		<chatgpt-api.version>4.3.0</chatgpt-api.version>
 		<guava.version>32.0.1-jre</guava.version>
 		<jda.version>5.0.0-beta.12</jda.version>
 	</properties>
