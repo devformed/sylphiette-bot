@@ -84,9 +84,11 @@ public class ChatGptClientService {
 
 	private com.plexpt.chatgpt.entity.chat.Message toGptMessage(String author, String content, boolean system) {
 		if (system) return com.plexpt.chatgpt.entity.chat.Message.ofSystem(content);
+		String role = botName.equals(author) ? "assistant" : "user";
+		String authorName = author.replaceAll("[^a-zA-Z0-9_-]", "_");
 		return com.plexpt.chatgpt.entity.chat.Message.builder()
-				.role(botName.equals(author) ? "assistant" : "user")
-				.name(author)
+				.role(role)
+				.name(authorName)
 				.content(content)
 				.build();
 	}
