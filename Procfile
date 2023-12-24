@@ -1,1 +1,1 @@
-worker: java -jar target/dcbot-*.jar
+worker: java -jar core/target/sylphiette-bot-core-*.jar
